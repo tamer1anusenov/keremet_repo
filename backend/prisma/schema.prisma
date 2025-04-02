@@ -1,0 +1,36 @@
+model Appointment {
+  id             String   @id @default(uuid())
+  doctorId       String
+  patientId      String
+  appointmentDate DateTime
+  status         String   @default("CONFIRMED") // CONFIRMED, CANCELLED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  doctor         User     @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  patient        User     @relation("PatientAppointments", fields: [patientId], references: [id])
+
+  @@index([doctorId])
+  @@index([patientId])
+  @@index([appointmentDate])
+}
+
+// Add these relations to the User model
+model User {
+  // ... existing fields ...
+
+  // Doctor's appointments
+  doctorAppointments Appointment[] @relation("DoctorAppointments")
+  // Patient's appointments
+  patientAppointments Appointment[] @relation("PatientAppointments")
+} 
+
+datasource db {
+  provider = "postgresql" // Choose the appropriate provider (e.g., "mysql", "sqlite")
+  url      = env("DB_URL") // URL to your database, fetched from the .env file
+}
+
+// Example for the client (assuming you're using a User model)
+generator client {
+  provider = "prisma-client-js"
+}
