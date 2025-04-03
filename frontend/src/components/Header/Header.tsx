@@ -8,8 +8,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Typography,
-  Avatar,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
@@ -17,11 +15,11 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import whiteLogo from '../../assets/images/whitelogo.png';
-import { useAuth } from '../../hooks/useAuth';
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: '#00A6B4',
   boxShadow: 'none',
+  padding: '8px 0',
 });
 
 const LogoImage = styled('img')({
@@ -33,6 +31,8 @@ const NavButton = styled(Button)(({ theme }) => ({
   color: '#fff',
   textTransform: 'none',
   marginLeft: theme.spacing(2),
+  padding: '6px 16px',
+  fontSize: '1rem',
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
@@ -40,19 +40,22 @@ const NavButton = styled(Button)(({ theme }) => ({
 
 const AuthButton = styled(Button)(({ theme }) => ({
   color: '#fff',
-  textTransform: 'none',
-  marginLeft: theme.spacing(1),
   borderColor: '#fff',
   '&:hover': {
     borderColor: '#fff',
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
+  padding: '6px 16px',
+  fontSize: '0.9rem',
+  textTransform: 'none',
+  border: '1px solid #fff',
 }));
 
 const UserInfo = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   marginLeft: 'auto',
+  gap: '8px',
 });
 
 const Header: React.FC = () => {
@@ -60,7 +63,8 @@ const Header: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,9 +74,11 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (path: string) => {
-    navigate(path);
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
     handleClose();
+    navigate('/');
   };
 
   const navItems = [
@@ -80,15 +86,15 @@ const Header: React.FC = () => {
     { label: 'Врачи', path: '/doctors' },
     { label: 'Записаться на прием', path: '/appointment' },
     { label: 'Анализы', path: '/tests' },
-    { label: 'Контакты', path: '/contacts' },
     { label: 'О нас', path: '/about' },
+    { label: 'Контакты', path: '/contacts' },
   ];
 
   return (
-    <StyledAppBar position="sticky">
+    <StyledAppBar position="static">
       <Container maxWidth="lg">
-        <Toolbar disableGutters>
-          <Link to="/">
+        <Toolbar disableGutters sx={{ minHeight: '64px' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
             <LogoImage src={whiteLogo} alt="Керемет" />
           </Link>
 
@@ -119,28 +125,52 @@ const Header: React.FC = () => {
                 {navItems.map((item) => (
                   <MenuItem
                     key={item.path}
-                    onClick={() => handleMenuItemClick(item.path)}
+                    onClick={() => {
+                      navigate(item.path);
+                      handleClose();
+                    }}
                   >
                     {item.label}
                   </MenuItem>
                 ))}
-                {!user ? (
+                {!isLoggedIn ? (
                   <>
-                    <MenuItem onClick={() => handleMenuItemClick('/login')}>
+                    <MenuItem onClick={() => {
+                      navigate('/login');
+                      handleClose();
+                    }}>
                       Войти
                     </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick('/register')}>
+                    <MenuItem onClick={() => {
+                      navigate('/register');
+                      handleClose();
+                    }}>
                       Регистрация
                     </MenuItem>
                   </>
                 ) : (
-                  <MenuItem onClick={logout}>Выйти</MenuItem>
+                  <>
+                    <MenuItem onClick={() => {
+                      navigate('/profile');
+                      handleClose();
+                    }}>
+                      Личный кабинет
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      Выйти
+                    </MenuItem>
+                  </>
                 )}
               </Menu>
             </>
           ) : (
             <>
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+              <Box sx={{ 
+                flexGrow: 1, 
+                display: 'flex', 
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
                 {navItems.map((item) => (
                   <NavButton
                     key={item.path}
@@ -151,13 +181,13 @@ const Header: React.FC = () => {
                 ))}
               </Box>
 
-              {!user ? (
-                <Box>
-                  <AuthButton variant="text" onClick={() => navigate('/login')}>
+              {!isLoggedIn ? (
+                <Box sx={{ display: 'flex', gap: '8px' }}>
+                  <AuthButton onClick={() => navigate('/login')}>
                     Войти
                   </AuthButton>
                   <AuthButton
-                    variant="outlined"
+                    className="outlined"
                     onClick={() => navigate('/register')}
                   >
                     Регистрация
@@ -165,14 +195,16 @@ const Header: React.FC = () => {
                 </Box>
               ) : (
                 <UserInfo>
-                  <Typography variant="body1" sx={{ color: '#fff', mr: 2 }}>
-                    {user.firstName} {user.lastName}
-                  </Typography>
-                  <Avatar
-                    sx={{ width: 32, height: 32, mr: 2 }}
-                    alt={`${user.firstName} ${user.lastName}`}
-                  />
-                  <AuthButton variant="outlined" onClick={logout}>
+                  <AuthButton 
+                    className="outlined"
+                    onClick={() => navigate('/profile')}
+                  >
+                    Личный кабинет
+                  </AuthButton>
+                  <AuthButton 
+                    className="outlined"
+                    onClick={handleLogout}
+                  >
                     Выйти
                   </AuthButton>
                 </UserInfo>

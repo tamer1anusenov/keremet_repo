@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -24,7 +24,6 @@ import {
   IconButton,
   InputAdornment,
   Pagination,
-  CircularProgress,
   Alert,
   Chip,
   SelectChangeEvent,
@@ -32,6 +31,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import { useNavigate } from 'react-router-dom';
 
 interface Test {
   id: string;
@@ -81,6 +82,8 @@ const mockTests: Test[] = [
 ];
 
 const TestsPage: React.FC = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<FilterState>({
     dateRange: 'all',
@@ -88,9 +91,14 @@ const TestsPage: React.FC = () => {
     status: 'all',
   });
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
-  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const testsPerPage = 10;
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleFilterChange = (field: keyof FilterState) => (
     event: SelectChangeEvent
@@ -220,11 +228,7 @@ const TestsPage: React.FC = () => {
         </Grid>
       </Paper>
 
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-          <CircularProgress />
-        </Box>
-      ) : filteredTests.length === 0 ? (
+      {filteredTests.length === 0 ? (
         <Alert severity="info" sx={{ mt: 2 }}>
           Анализы не найдены. Попробуйте изменить параметры поиска.
         </Alert>

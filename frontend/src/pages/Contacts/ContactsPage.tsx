@@ -87,7 +87,7 @@ const ContactsPage: React.FC = () => {
 
       <Grid container spacing={4}>
         {/* Контактная информация */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} sx={{ height: '60%' }}>
           <Paper elevation={3} sx={{ p: 3, height: '60%' }}>
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

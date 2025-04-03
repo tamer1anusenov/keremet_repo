@@ -1,3 +1,19 @@
+import alina from '../assets/images/alina.png';
+import ruslan from '../assets/images/ruslan.png';
+import aizhan from '../assets/images/aizhan.png';
+import gulnura from '../assets/images/gulnura.png';
+import daniyar from '../assets/images/daniyar.png';
+import elmira from '../assets/images/elmira.png';
+import marat from '../assets/images/marat.png';
+import timur from '../assets/images/timur.png';
+import askar from '../assets/images/askar.png';
+import sergey from '../assets/images/sergey.png';
+import murat from '../assets/images/murat.png';
+import zhanna from '../assets/images/zhanna.png';
+import nuria from '../assets/images/nuria.png';
+import aigul from '../assets/images/aigul.png';
+import gulnar from '../assets/images/gulnar.png';
+
 export interface Doctor {
   id: string;
   firstName: string;
@@ -36,7 +52,7 @@ export const doctors: Doctor[] = [
     specialization: 'THERAPIST',
     experience: '12 лет',
     description: 'Диагностика и лечение ОРЗ, хронических заболеваний, вакцинация',
-    image: 'assets/images/alina.webp',
+    image: alina,
   },
   {
     id: '2',
@@ -45,7 +61,7 @@ export const doctors: Doctor[] = [
     specialization: 'THERAPIST',
     experience: '8 лет',
     description: 'Амбулаторная терапия, профилактика заболеваний, диагностика',
-    image: 'assets/images/daniyar.webp',
+    image: daniyar,
   },
   {
     id: '3',
@@ -54,7 +70,7 @@ export const doctors: Doctor[] = [
     specialization: 'THERAPIST',
     experience: '10 лет',
     description: 'Комплексная терапия, лечение пациентов с гипертонией',
-    image: 'assets/images/aizhan.png',
+    image: aizhan,
   },
 
   // Кардиологи
@@ -66,7 +82,7 @@ export const doctors: Doctor[] = [
     specialization: 'CARDIOLOGIST',
     experience: '15 лет',
     description: 'Лечение ИБС, ЭКГ, консультации по сердечно-сосудистым заболеваниям',
-    image: 'assets/images/timur.webp',
+    image: timur,
   },
   {
     id: '5',
@@ -75,7 +91,7 @@ export const doctors: Doctor[] = [
     specialization: 'CARDIOLOGIST',
     experience: '11 лет',
     description: 'Кардиоскрининг, эхокардиография, реабилитация после инфаркта',
-    image: 'assets/images/gulnara.webp',
+    image: gulnura,
   },
   {
     id: '6',
@@ -84,7 +100,7 @@ export const doctors: Doctor[] = [
     specialization: 'CARDIOLOGIST',
     experience: '9 лет',
     description: 'Диагностика и лечение аритмии, гипертонии',
-    image: 'assets/images/marat.webp',
+    image: marat,
   },
 
   // Неврологи
@@ -95,7 +111,7 @@ export const doctors: Doctor[] = [
     specialization: 'NEUROLOGIST',
     experience: '13 лет',
     description: 'Мигрени, бессонница, постинсультное восстановление',
-    image: 'assets/images/elmira.webp',
+    image: elmira,
   },
   {
     id: '8',
@@ -104,7 +120,7 @@ export const doctors: Doctor[] = [
     specialization: 'NEUROLOGIST',
     experience: '10 лет',
     description: 'Радикулит, остеохондроз, невропатия',
-    image: 'assets/images/ruslan.webp',
+    image: ruslan,
   },
   {
     id: '9',
@@ -113,7 +129,7 @@ export const doctors: Doctor[] = [
     specialization: 'NEUROLOGIST',
     experience: '7 лет',
     description: 'ЭЭГ диагностика, вестибулярные расстройства',
-    image: 'assets/images/zhanna.webp',
+    image: zhanna,
   },
 
   // Педиатры
@@ -124,7 +140,7 @@ export const doctors: Doctor[] = [
     specialization: 'PEDIATRICIAN',
     experience: '10 лет',
     description: 'Наблюдение за детьми от 0 до 12 лет, вакцинация, ОРВИ',
-    image: 'assets/images/nuriya.webp',
+    image: nuria,
   },
   {
     id: '11',
@@ -133,7 +149,7 @@ export const doctors: Doctor[] = [
     specialization: 'PEDIATRICIAN',
     experience: '8 лет',
     description: 'Аллергии, диспансеризация, консультации родителей',
-    image: 'assets/images/gulnar.webp',
+    image: gulnar,
   },
   {
     id: '12',
@@ -142,7 +158,7 @@ export const doctors: Doctor[] = [
     specialization: 'PEDIATRICIAN',
     experience: '6 лет',
     description: 'Работа с новорожденными, хронические детские заболевания',
-    image: 'assets/images/sergey.webp',
+    image: sergey,
   },
 
   // Хирурги
@@ -153,7 +169,7 @@ export const doctors: Doctor[] = [
     specialization: 'SURGEON',
     experience: '14 лет',
     description: 'Общая хирургия, лапароскопия',
-    image: 'assets/images/askar.webp',
+    image: askar,
   },
   {
     id: '14',
@@ -162,7 +178,7 @@ export const doctors: Doctor[] = [
     specialization: 'SURGEON',
     experience: '12 лет',
     description: 'Малые хирургические вмешательства, перевязки',
-    image: 'assets/images/aigul.webp',
+    image: aigul,
   },
   {
     id: '15',
@@ -171,6 +187,6 @@ export const doctors: Doctor[] = [
     specialization: 'SURGEON',
     experience: '9 лет',
     description: 'Послеоперационное сопровождение, амбулаторные операции',
-    image: 'assets/images/murad.webp',
+    image: murat,
   },
 ]; 

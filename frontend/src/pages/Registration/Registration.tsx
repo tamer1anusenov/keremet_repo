@@ -114,18 +114,18 @@ const Registration: React.FC = () => {
       inn: formData.inn,
       phone: formData.phone,
       password: formData.password,
-      role: formData.role.toUpperCase() // Преобразование роли в верхний регистр
+      role: formData.role.toUpperCase() // Convert role to uppercase
     };
     
     try {
       await dispatch(register(registrationData)).unwrap();
       navigate('/');
     } catch (err) {
-      // Ошибка обрабатывается редьюсером
+      // Error is handled by the reducer
     }
   };
 
-  // Показать состояние загрузки
+  // Show loading state
   if (loading) {
     return (
       <Container maxWidth="sm">
@@ -136,7 +136,7 @@ const Registration: React.FC = () => {
     );
   }
 
-  // Показать сообщение о том, что пользователь уже аутентифицирован
+  // Show already authenticated message
   if (isAuthenticated && !location.state?.from) {
     return (
       <Container maxWidth="sm">

@@ -194,7 +194,7 @@ const AppointmentPage: React.FC = () => {
             <StyledCard onClick={() => handleDoctorSelect(doctor)}>
               <CardMedia
                 component="img"
-                height="200"
+                height="auto"
                 image={doctor.image}
                 alt={`${doctor.firstName} ${doctor.lastName}`}
               />
