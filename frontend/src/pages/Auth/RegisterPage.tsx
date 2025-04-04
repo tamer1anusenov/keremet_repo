@@ -7,7 +7,9 @@ import {
   Typography,
   Container,
   Paper,
+  Alert,
 } from '@mui/material';
+import RoleSelector, { UserRole } from '../../components/RoleSelector/RoleSelector';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ const RegisterPage: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+  const [role, setRole] = useState<UserRole>('patient');
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,25 +31,51 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
+  const handleRoleChange = (newRole: UserRole) => {
+    setRole(newRole);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    
+    // Validate form
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError('Пожалуйста, заполните все поля');
+      return;
+    }
     
     // Simple password confirmation check
     if (formData.password !== formData.confirmPassword) {
-      alert('Пароли не совпадают');
+      setError('Пароли не совпадают');
       return;
     }
 
     // Simulate successful registration
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userRole', role);
     localStorage.setItem('user', JSON.stringify({
       firstName: formData.firstName,
       lastName: formData.lastName,
-      email: formData.email
+      email: formData.email,
+      role: role
     }));
     
-    // Redirect to profile page
-    navigate('/profile');
+    // Redirect to role-specific dashboard
+    navigate(getDashboardPath(role));
+  };
+
+  const getDashboardPath = (userRole: UserRole): string => {
+    switch (userRole) {
+      case 'admin':
+        return '/admin-dashboard';
+      case 'doctor':
+        return '/doctor-dashboard';
+      case 'patient':
+        return '/profile';
+      default:
+        return '/';
+    }
   };
 
   return (
@@ -55,6 +85,15 @@ const RegisterPage: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom align="center">
             Регистрация
           </Typography>
+          
+          <RoleSelector role={role} onRoleChange={handleRoleChange} />
+          
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth

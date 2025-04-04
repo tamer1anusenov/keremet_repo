@@ -63,18 +63,46 @@ const Footer: React.FC = () => {
               Керемет - ведущая клиника в Казахстане, предоставляющая качественные медицинские услуги с использованием современного оборудования и инновационных методов лечения.
             </Typography>
             <Box sx={{ mt: 2 }}>
-              <SocialButton aria-label="facebook">
-                <FacebookIcon />
-              </SocialButton>
-              <SocialButton aria-label="instagram">
-                <InstagramIcon />
-              </SocialButton>
-              <SocialButton aria-label="whatsapp">
-                <WhatsAppIcon />
-              </SocialButton>
-              <SocialButton aria-label="telegram">
-                <TelegramIcon />
-              </SocialButton>
+              <Link 
+                href="https://www.facebook.com/keremetclinik" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                sx={{ textDecoration: 'none' }}
+              >
+                <SocialButton aria-label="facebook">
+                  <FacebookIcon />
+                </SocialButton>
+              </Link>
+              <Link 
+                href="https://www.instagram.com/keremet_clinik?igsh=OGJ4MGpnYmVpdzVh" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                sx={{ textDecoration: 'none' }}
+              >
+                <SocialButton aria-label="instagram">
+                  <InstagramIcon />
+                </SocialButton>
+              </Link>
+              <Link 
+                href="https://wa.me/77071234567" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                sx={{ textDecoration: 'none' }}
+              >
+                <SocialButton aria-label="whatsapp">
+                  <WhatsAppIcon />
+                </SocialButton>
+              </Link>
+              <Link 
+                href="https://t.me/madyyyyyi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                sx={{ textDecoration: 'none' }}
+              >
+                <SocialButton aria-label="telegram">
+                  <TelegramIcon />
+                </SocialButton>
+              </Link>
             </Box>
           </Grid>
 

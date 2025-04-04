@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import whiteLogo from '../../assets/images/whitelogo.png';
+import NotificationCenter from '../NotificationCenter/NotificationCenter';
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: '#00A6B4',
@@ -58,6 +59,15 @@ const UserInfo = styled(Box)({
   gap: '8px',
 });
 
+// Добавляем интерфейс для пунктов навигации
+interface NavItem {
+  label: string;
+  path: string;
+  state?: {
+    tab?: number;
+  };
+}
+
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const theme = useTheme();
@@ -65,6 +75,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const userRole = localStorage.getItem('userRole') || '';
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -77,11 +88,13 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('user');
+    localStorage.removeItem('userRole');
     handleClose();
     navigate('/');
   };
 
-  const navItems = [
+  // Базовые пункты навигации для пациентов
+  const patientNavItems: NavItem[] = [
     { label: 'Главная', path: '/' },
     { label: 'Врачи', path: '/doctors' },
     { label: 'Записаться на прием', path: '/appointment' },
@@ -90,11 +103,44 @@ const Header: React.FC = () => {
     { label: 'Контакты', path: '/contacts' },
   ];
 
+  // Пункты навигации для врачей
+  const doctorNavItems: NavItem[] = [
+    { label: 'Главная', path: '/doctor-dashboard' },
+    { label: 'Приемы', path: '/doctor-dashboard', state: { tab: 0 } },
+    { label: 'Мед. карты', path: '/doctor-dashboard/patient-selection' },
+    { label: 'Анализы', path: '/doctor-dashboard/tests' },
+  ];
+  
+  // Пункты навигации для администраторов
+  const adminNavItems: NavItem[] = [
+    { label: 'Главная', path: '/admin-dashboard' },
+    { label: 'Врачи', path: '/admin-dashboard/doctors' },
+    { label: 'Приемы', path: '/admin-dashboard/appointments' },
+    { label: 'Управление анализами', path: '/admin-dashboard/tests' },
+  ];
+
+  // Выбор пунктов меню в зависимости от роли
+  let navItems: NavItem[] = patientNavItems;
+  
+  if (userRole === 'doctor') {
+    navItems = doctorNavItems;
+  } else if (userRole === 'admin') {
+    navItems = adminNavItems;
+  }
+
+  // Определяем куда редиректить по клику на логотип
+  let logoPath = '/';
+  if (userRole === 'doctor') {
+    logoPath = '/doctor-dashboard';
+  } else if (userRole === 'admin') {
+    logoPath = '/admin-dashboard';
+  }
+
   return (
     <StyledAppBar position="static">
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ minHeight: '64px' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Link to={logoPath} style={{ display: 'flex', alignItems: 'center' }}>
             <LogoImage src={whiteLogo} alt="Керемет" />
           </Link>
 
@@ -124,9 +170,9 @@ const Header: React.FC = () => {
               >
                 {navItems.map((item) => (
                   <MenuItem
-                    key={item.path}
+                    key={item.path + (item.state ? JSON.stringify(item.state) : '')}
                     onClick={() => {
-                      navigate(item.path);
+                      navigate(item.path, item.state ? { state: item.state } : undefined);
                       handleClose();
                     }}
                   >
@@ -150,12 +196,17 @@ const Header: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <MenuItem onClick={() => {
-                      navigate('/profile');
-                      handleClose();
-                    }}>
-                      Личный кабинет
+                    <MenuItem>
+                      <NotificationCenter />
                     </MenuItem>
+                    {userRole !== 'admin' && (
+                      <MenuItem onClick={() => {
+                        navigate(userRole === 'doctor' ? '/doctor-dashboard' : '/profile');
+                        handleClose();
+                      }}>
+                        Личный кабинет
+                      </MenuItem>
+                    )}
                     <MenuItem onClick={handleLogout}>
                       Выйти
                     </MenuItem>
@@ -173,8 +224,8 @@ const Header: React.FC = () => {
               }}>
                 {navItems.map((item) => (
                   <NavButton
-                    key={item.path}
-                    onClick={() => navigate(item.path)}
+                    key={item.path + (item.state ? JSON.stringify(item.state) : '')}
+                    onClick={() => navigate(item.path, item.state ? { state: item.state } : undefined)}
                   >
                     {item.label}
                   </NavButton>
@@ -195,12 +246,15 @@ const Header: React.FC = () => {
                 </Box>
               ) : (
                 <UserInfo>
-                  <AuthButton 
-                    className="outlined"
-                    onClick={() => navigate('/profile')}
-                  >
-                    Личный кабинет
-                  </AuthButton>
+                  <NotificationCenter />
+                  {userRole !== 'admin' && (
+                    <AuthButton 
+                      className="outlined"
+                      onClick={() => navigate(userRole === 'doctor' ? '/doctor-dashboard' : '/profile')}
+                    >
+                      Личный кабинет
+                    </AuthButton>
+                  )}
                   <AuthButton 
                     className="outlined"
                     onClick={handleLogout}
