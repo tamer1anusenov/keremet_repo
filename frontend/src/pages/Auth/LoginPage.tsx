@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -35,8 +36,9 @@ const LoginPage: React.FC = () => {
       email: formData.email
     }));
     
-    // Redirect to profile page
-    navigate('/profile');
+    // Get the redirect path from location state or default to profile
+    const from = (location.state as any)?.from?.pathname || '/profile';
+    navigate(from);
   };
 
   return (

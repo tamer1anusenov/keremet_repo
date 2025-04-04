@@ -44,7 +44,7 @@ interface Appointment {
 }
 
 const AppointmentsHistory: React.FC = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([
+  const [appointments] = useState<Appointment[]>([
     {
       id: '1',
       doctorName: 'Алина Ким',
@@ -52,7 +52,7 @@ const AppointmentsHistory: React.FC = () => {
       date: '2023-04-15',
       time: '10:00',
       status: 'completed',
-      notes: 'Рекомендовано пройти общий анализ крови',
+      notes: 'Рекомендовано пройти общий анализ крови, контроль артериального давления',
     },
     {
       id: '2',
@@ -61,7 +61,35 @@ const AppointmentsHistory: React.FC = () => {
       date: '2023-05-20',
       time: '14:30',
       status: 'scheduled',
+      notes: 'Плановый осмотр, контроль ЭКГ',
     },
+    {
+      id: '3',
+      doctorName: 'Мария Петрова',
+      specialization: 'Гастроэнтеролог',
+      date: '2023-03-10',
+      time: '11:15',
+      status: 'completed',
+      notes: 'Коррекция лечения гастрита, назначены новые препараты',
+    },
+    {
+      id: '4',
+      doctorName: 'Дмитрий Соколов',
+      specialization: 'Невролог',
+      date: '2023-02-28',
+      time: '09:30',
+      status: 'completed',
+      notes: 'Осмотр по поводу остеохондроза, назначен курс массажа',
+    },
+    {
+      id: '5',
+      doctorName: 'Елена Иванова',
+      specialization: 'Аллерголог',
+      date: '2023-04-05',
+      time: '13:45',
+      status: 'completed',
+      notes: 'Сезонное обострение, скорректирована терапия',
+    }
   ]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -89,16 +117,14 @@ const AppointmentsHistory: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedAppointment) {
-      setAppointments(appointments.filter(a => a.id !== selectedAppointment.id));
+      // Implement delete logic here
       handleMenuClose();
     }
   };
 
   const handleSave = () => {
     if (editingAppointment.id) {
-      setAppointments(appointments.map(a => 
-        a.id === editingAppointment.id ? { ...a, ...editingAppointment } : a
-      ));
+      // Implement save logic here
       setOpenDialog(false);
       setEditingAppointment({});
     }
@@ -139,7 +165,7 @@ const AppointmentsHistory: React.FC = () => {
       <List>
         {appointments.map((appointment) => (
           <Paper key={appointment.id} sx={{ mb: 2, p: 2 }} elevation={2}>
-            <ListItem>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <ListItemText
                 primary={
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -192,7 +218,7 @@ const AppointmentsHistory: React.FC = () => {
                   <MoreVert />
                 </IconButton>
               </ListItemSecondaryAction>
-            </ListItem>
+            </Box>
           </Paper>
         ))}
       </List>

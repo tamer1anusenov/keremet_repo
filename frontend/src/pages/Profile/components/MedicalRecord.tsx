@@ -6,16 +6,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Chip,
   Grid,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
@@ -32,57 +25,56 @@ interface MedicalCondition {
 }
 
 const MedicalRecord: React.FC = () => {
-  const [conditions, setConditions] = useState<MedicalCondition[]>([
+  const [conditions] = useState<MedicalCondition[]>([
     {
       id: '1',
       name: 'Гипертония',
       diagnosisDate: '2023-01-15',
       status: 'chronic',
-      treatment: 'Прием антигипертензивных препаратов',
-      notes: 'Контроль давления 2 раза в день',
+      treatment: 'Лозартан 50мг 1 раз в день, контроль диеты, ограничение соли',
+      notes: 'Регулярный мониторинг АД. Целевое давление <140/90 мм.рт.ст.',
     },
     {
       id: '2',
       name: 'ОРВИ',
       diagnosisDate: '2023-03-20',
       status: 'resolved',
-      treatment: 'Симптоматическое лечение',
-      notes: 'Выздоровление через 7 дней',
+      treatment: 'Противовирусная терапия, жаропонижающие препараты, обильное питье',
+      notes: 'Полное выздоровление. Рекомендована вакцинация от гриппа в следующем сезоне.',
     },
-  ]);
-
-  const [openDialog, setOpenDialog] = useState(false);
-  const [newCondition, setNewCondition] = useState<Partial<MedicalCondition>>({
-    name: '',
-    diagnosisDate: '',
-    status: 'active',
-    treatment: '',
-    notes: '',
-  });
-
-  const handleAddCondition = () => {
-    if (newCondition.name && newCondition.diagnosisDate) {
-      setConditions([
-        ...conditions,
-        {
-          id: Date.now().toString(),
-          name: newCondition.name,
-          diagnosisDate: newCondition.diagnosisDate,
-          status: newCondition.status as 'active' | 'chronic' | 'resolved',
-          treatment: newCondition.treatment || '',
-          notes: newCondition.notes || '',
-        },
-      ]);
-      setOpenDialog(false);
-      setNewCondition({
-        name: '',
-        diagnosisDate: '',
-        status: 'active',
-        treatment: '',
-        notes: '',
-      });
+    {
+      id: '3',
+      name: 'Гастрит',
+      diagnosisDate: '2022-08-10',
+      status: 'chronic',
+      treatment: 'Омепразол 20мг, диетотерапия, дробное питание',
+      notes: 'Обострения 1-2 раза в год. Контроль через ФГДС 1 раз в год.',
+    },
+    {
+      id: '4',
+      name: 'Острый бронхит',
+      diagnosisDate: '2021-11-25',
+      status: 'resolved',
+      treatment: 'Амоксициллин 500мг 2 раза в день, муколитики, ингаляции',
+      notes: 'Полное выздоровление через 14 дней. Рекомендовано избегать переохлаждения.',
+    },
+    {
+      id: '5',
+      name: 'Аллергический ринит',
+      diagnosisDate: '2020-05-03',
+      status: 'chronic',
+      treatment: 'Цетиризин при обострениях, назальные спреи',
+      notes: 'Сезонные обострения весной. Проведена аллергодиагностика.',
+    },
+    {
+      id: '6',
+      name: 'Остеохондроз шейного отдела',
+      diagnosisDate: '2019-09-15',
+      status: 'chronic',
+      treatment: 'ЛФК, массаж, физиотерапия',
+      notes: 'Регулярные профилактические курсы лечения 2 раза в год.',
     }
-  };
+  ]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -121,12 +113,41 @@ const MedicalRecord: React.FC = () => {
         </Typography>
         <List>
           {conditions.map((condition) => (
-            <ListItem key={condition.id}>
-              <ListItemText
-                primary={condition.name}
-                secondary={`Диагностировано: ${condition.diagnosisDate}`}
-              />
-            </ListItem>
+            <Paper key={condition.id} sx={{ mb: 2, p: 2 }} elevation={1}>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="h6">{condition.name}</Typography>
+                      <StyledChip
+                        label={getStatusLabel(condition.status)}
+                        color={getStatusColor(condition.status)}
+                        size="small"
+                      />
+                    </Box>
+                  }
+                  secondary={
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                      <Grid item xs={12}>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong>Диагностировано:</strong> {condition.diagnosisDate}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong>Лечение:</strong> {condition.treatment}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong>Примечания:</strong> {condition.notes}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  }
+                />
+              </ListItem>
+            </Paper>
           ))}
         </List>
       </Paper>

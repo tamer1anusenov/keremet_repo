@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/Home/Home';
 import DoctorsPage from './pages/Doctors/DoctorsPage';
 import TestsPage from './pages/Tests/TestsPage';
@@ -10,9 +10,18 @@ import AppointmentPage from './pages/Appointment/AppointmentPage';
 import ContactsPage from './pages/Contacts/ContactsPage';
 import AboutPage from './pages/About/AboutPage';
 
-const AppRoutes: React.FC = () => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
+  if (!isLoggedIn) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -24,11 +33,19 @@ const AppRoutes: React.FC = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route 
         path="/profile" 
-        element={isLoggedIn ? <ProfilePage /> : <Navigate to="/login" />} 
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        } 
       />
       <Route 
         path="/tests" 
-        element={isLoggedIn ? <TestsPage /> : <Navigate to="/login" />} 
+        element={
+          <ProtectedRoute>
+            <TestsPage />
+          </ProtectedRoute>
+        } 
       />
     </Routes>
   );
